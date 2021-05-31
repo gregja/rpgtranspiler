@@ -1,0 +1,74 @@
+     A                                      DSPSIZ(24 80 *DS3) 
+     A                                      PRINT
+     A                                      INDARA
+     A                                      CA03(03)
+     A                                      CA04(04)
+     A                                      CA05(05)
+     A                                      CA06(06)
+     A                                      CA07(07)
+     A                                      CA12(12)
+     A*------------------------------------------------------------
+     A          R FENETRE
+     A                                      WINDOW(4 10 16 60)
+     A                                      WDWBORDER((*COLOR BLU) (*DSPATR RI)-
+     A                                       (*CHAR '        '))
+     A                                      CSRLOC(NULIG NUCOL)
+     A                                      RTNCSRLOC(&ZREC &ZFLD)
+     A                                  3  4'TOUCHES DE FONCTION :'
+     A                                      DSPATR(UL)
+     A                                      DSPATR(HI)
+     A                                  4  7'F3 = EXIT'
+     A                                  5  7'F4 = R.M.'
+     A                                  6  7'F5 = M+'
+     A                                  7  7'F6 = M-'
+     A                                  8  7'F7 = CLEAR'
+     A                                  9  7'F12 = EXIT'
+     A                                 11  4'MEMOIRE :'
+     A                                      DSPATR(UL)
+     A                                      DSPATR(HI)
+     A            ZMEMO         17Y 6O 12  6EDTCDE(M)
+     A                                 14  4'OPERATEURS :'
+     A                                      DSPATR(UL)
+     A                                      DSPATR(HI)
+     A                                 15  7'+  -  *  /'
+     A                                  1 25'CALCULETTE'
+     A                                      DSPATR(HI)
+     A                                  3 32'OPE'
+     A                                      DSPATR(HI)
+     A                                  3 36'MONTANTS...,.......'
+     A                                      DSPATR(HI)
+     A            ZSIGN1         1A  B  4 33VALUES(' ' '+' '-' '*' '/')
+     A            ZSIGN2         1A  B  5 33VALUES(' ' '+' '-' '*' '/')
+     A            ZSIGN3         1A  B  6 33VALUES(' ' '+' '-' '*' '/')
+     A            ZSIGN4         1A  B  7 33VALUES(' ' '+' '-' '*' '/')
+     A            ZSIGN5         1A  B  8 33VALUES(' ' '+' '-' '*' '/')
+     A            ZSIGN6         1A  B  9 33VALUES(' ' '+' '-' '*' '/')
+     A            ZSIGN7         1A  B 10 33VALUES(' ' '+' '-' '*' '/')
+     A            ZSIGN8         1A  B 11 33VALUES(' ' '+' '-' '*' '/')
+     A            ZSIGN9         1A  B 12 33VALUES(' ' '+' '-' '*' '/')
+     A            ZMONT1        17Y 6B  4 36EDTCDE(M)
+     A            ZMONT2        17Y 6B  5 36EDTCDE(M)
+     A            ZMONT3        17Y 6B  6 36EDTCDE(M)
+     A            ZMONT4        17Y 6B  7 36EDTCDE(M)
+     A            ZMONT5        17Y 6B  8 36EDTCDE(M)
+     A            ZMONT6        17Y 6B  9 36EDTCDE(M)
+     A            ZMONT7        17Y 6B 10 36EDTCDE(M)
+     A            ZMONT8        17Y 6B 11 36EDTCDE(M)
+     A            ZMONT9        17Y 6B 12 36EDTCDE(M)
+     A                                 13 32'========================'
+     A                                      DSPATR(HI)
+     A                                 14 28'TOTAL :'
+     A                                      DSPATR(HI)
+     A            ZTOTAL        17Y 6O 14 36EDTCDE(M)
+     A            ZAVERT        20   O 15 35DSPATR(HI)
+     A            NULIG          3S 0H
+     A            NUCOL          3S 0H
+     A            ZREC          10A  H
+     A            ZFLD          10A  H
+     A*----------------------------------------------------------------
+     A* FORMAT FANTOME : INUTILISE MAIS INDISPENSABLE POUR EVITER QUE
+     A*  LA FENETRE N'EFFACE L'ECRAN PRECEDENT AVANT SUPERPOSITION
+     A          R GHOST
+     A                                      ASSUME
+     A                                      OVERLAY
+     A                                  1  3' '

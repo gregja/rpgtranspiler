@@ -1,0 +1,389 @@
+     H*****************************************************************
+     H* APPLICATION      : CALCULETTE AS/400                          *
+     H* NOM DU PROGRAMME : CALC (ECRAN ASSOCIE : CALCFM)              *
+     H* DATE DE CREATION : 01/10/1996 (version RPG 3, antiquité       *
+     H*                     destinée aux archéologues ;)              *
+     H* AUTEUR           : GREGORY JARRIGE                            *
+     H*****************************************************************
+     FCALCFM    CF   E             WORKSTN 
+     F                                     INFDS(DSECR)
+      *
+     D TSG             S              1    DIM(10)
+     D TSG2            S              1    DIM(10)
+     D TMT             S             17  6 DIM(10)
+     D TMT2            S             22  9 DIM(10)
+      *
+     D DSECR           DS
+     D  POSC                 370    371B 0
+      ***********************************
+      * TRANSACTION 1
+      ***********************************
+     C                   Z-ADD     0             I                 2 0
+     C                   Z-ADD     0             I2                2 0
+     C                   Z-ADD     0             J                 2 0
+     C                   Z-ADD     0             WMONT            30 9
+     C                   Z-ADD     *HIVAL        WMONT2           22 9
+     C                   Z-ADD     *HIVAL        WTOTAL           17 6
+     C                   MOVEL     ' '           TAG               1
+      *
+     C                   Z-ADD     0             ZMEMO
+     C                   EXSR      INITI1
+     C     TRAN01        TAG
+     C                   EXFMT     FENETRE
+     C     *IN03         CABEQ     *ON           FIN01
+     C     *IN12         CABEQ     *ON           FIN01
+      * CALCUL POSITION DU CURSEUR
+     C                   EXSR      POCUR
+     C     *IN04         IFEQ      *ON
+     C                   EXSR      GUIDE
+     C                   ENDIF
+      * REPOSITIONNEMENT DU CURSEUR
+     C                   Z-ADD     POSLI         NULIG
+     C                   Z-ADD     POSCO         NUCOL
+      * VERIFICATION TRANSACTION
+     C                   MOVEL     '0'           VER01             1
+     C                   EXSR      VERIF1
+     C     VER01         CABEQ     '1'           TRAN01
+      * CALCUL DU TOTAL
+     C                   EXSR      VALID1
+      * MISE EN MEMOIRE
+     C     *IN05         IFEQ      *ON
+     C                   Z-ADD     ZTOTAL        ZMEMO
+     C                   ENDIF
+      * CLEAR DE LA MEMOIRE
+     C     *IN06         IFEQ      *ON
+     C                   Z-ADD     0             ZMEMO
+     C                   ENDIF
+      * CLEAR DE TOUTES LES ZONES (SAUF LA MEMOIRE)
+     C     *IN07         IFEQ      *ON
+     C                   EXSR      INITI1
+     C                   ENDIF
+     C                   GOTO      TRAN01
+     C     FIN01         TAG
+      *
+     C                   SETON                                        LR
+      *****************************************
+      * INITIALISATION TRANSACTION 1
+      *****************************************
+     C     INITI1        BEGSR
+      *
+     C                   MOVEL     ' '           ZSIGN1
+     C                   MOVEL     ' '           ZSIGN2
+     C                   MOVEL     ' '           ZSIGN3
+     C                   MOVEL     ' '           ZSIGN4
+     C                   MOVEL     ' '           ZSIGN5
+     C                   MOVEL     ' '           ZSIGN6
+     C                   MOVEL     ' '           ZSIGN7
+     C                   MOVEL     ' '           ZSIGN8
+     C                   MOVEL     ' '           ZSIGN9
+     C                   Z-ADD     0             ZMONT1
+     C                   Z-ADD     0             ZMONT2
+     C                   Z-ADD     0             ZMONT3
+     C                   Z-ADD     0             ZMONT4
+     C                   Z-ADD     0             ZMONT5
+     C                   Z-ADD     0             ZMONT6
+     C                   Z-ADD     0             ZMONT7
+     C                   Z-ADD     0             ZMONT8
+     C                   Z-ADD     0             ZMONT9
+     C                   Z-ADD     0             ZTOTAL
+     C                   MOVEL     *BLANKS       ZAVERT
+      *
+     C                   ENDSR
+      *****************************************
+      * VERIFICATION TRANSACTION 1
+      *****************************************
+     C     VERIF1        BEGSR
+      *
+     C                   MOVEL     *BLANKS       ZAVERT
+      *
+     C                   SETOFF                                       50
+     C                   SETOFF                                       51
+     C                   SETOFF                                       52
+     C                   SETOFF                                       53
+     C                   SETOFF                                       54
+     C                   SETOFF                                       55
+     C                   SETOFF                                       56
+     C                   SETOFF                                       57
+     C                   SETOFF                                       58
+     C                   SETOFF                                       59
+      *
+     C     ZSIGN1        IFEQ      ' '
+     C     ZMONT1        ANDNE     0
+     C                   MOVEL     '+'           ZSIGN1
+     C                   ENDIF
+      *
+     C     ZSIGN2        IFEQ      ' '
+     C     ZMONT2        ANDNE     0
+     C                   MOVEL     '+'           ZSIGN2
+     C                   ENDIF
+      *
+     C     ZSIGN3        IFEQ      ' '
+     C     ZMONT3        ANDNE     0
+     C                   MOVEL     '+'           ZSIGN3
+     C                   ENDIF
+      *
+     C     ZSIGN4        IFEQ      ' '
+     C     ZMONT4        ANDNE     0
+     C                   MOVEL     '+'           ZSIGN4
+     C                   ENDIF
+      *
+     C     ZSIGN5        IFEQ      ' '
+     C     ZMONT5        ANDNE     0
+     C                   MOVEL     '+'           ZSIGN5
+     C                   ENDIF
+      *
+     C     ZSIGN6        IFEQ      ' '
+     C     ZMONT6        ANDNE     0
+     C                   MOVEL     '+'           ZSIGN6
+     C                   ENDIF
+      *
+     C     ZSIGN7        IFEQ      ' '
+     C     ZMONT7        ANDNE     0
+     C                   MOVEL     '+'           ZSIGN7
+     C                   ENDIF
+      *
+     C     ZSIGN8        IFEQ      ' '
+     C     ZMONT8        ANDNE     0
+     C                   MOVEL     '+'           ZSIGN8
+     C                   ENDIF
+      *
+     C     ZSIGN9        IFEQ      ' '
+     C     ZMONT9        ANDNE     0
+     C                   MOVEL     '+'           ZSIGN9
+     C                   ENDIF
+      *
+     C     ZSIGN1        IFEQ      '/'
+     C     ZMONT1        ANDEQ     0
+     C                   SETON                                        51
+     C                   MOVEL     '1'           VER01
+     C                   ENDIF
+      *
+     C     ZSIGN2        IFEQ      '/'
+     C     ZMONT2        ANDEQ     0
+     C                   SETON                                        52
+     C                   MOVEL     '1'           VER01
+     C                   ENDIF
+      *
+     C     ZSIGN3        IFEQ      '/'
+     C     ZMONT3        ANDEQ     0
+     C                   SETON                                        53
+     C                   MOVEL     '1'           VER01
+     C                   ENDIF
+      *
+     C     ZSIGN4        IFEQ      '/'
+     C     ZMONT4        ANDEQ     0
+     C                   SETON                                        54
+     C                   MOVEL     '1'           VER01
+     C                   ENDIF
+      *
+     C     ZSIGN5        IFEQ      '/'
+     C     ZMONT5        ANDEQ     0
+     C                   SETON                                        55
+     C                   MOVEL     '1'           VER01
+     C                   ENDIF
+      *
+     C     ZSIGN6        IFEQ      '/'
+     C     ZMONT6        ANDEQ     0
+     C                   SETON                                        56
+     C                   MOVEL     '1'           VER01
+     C                   ENDIF
+      *
+     C     ZSIGN7        IFEQ      '/'
+     C     ZMONT7        ANDEQ     0
+     C                   SETON                                        57
+     C                   MOVEL     '1'           VER01
+     C                   ENDIF
+      *
+     C     ZSIGN8        IFEQ      '/'
+     C     ZMONT8        ANDEQ     0
+     C                   SETON                                        58
+     C                   MOVEL     '1'           VER01
+     C                   ENDIF
+      *
+     C     ZSIGN9        IFEQ      '/'
+     C     ZMONT9        ANDEQ     0
+     C                   SETON                                        59
+     C                   MOVEL     '1'           VER01
+     C                   ENDIF
+      *
+     C                   ENDSR
+      *****************************************************************
+      * VALIDATION TRANSACTION 1
+      *****************************************************************
+      * CETTE PROCEDURE CONTIENT L'ALGORITHME DE CALCUL
+      * PRECISION DE 9 DECIMALES EN INTERNE
+      * MULTIPLICATION & DIVISION PRIORITAIRES / ADDITION & SOUSTRACTION
+      *
+     C     VALID1        BEGSR
+      *
+     C                   MOVEL     ' '           TSG
+     C                   Z-ADD     0             TMT
+      *
+     C                   MOVEL     ZSIGN1        TSG(1)
+     C                   MOVEL     ZSIGN2        TSG(2)
+     C                   MOVEL     ZSIGN3        TSG(3)
+     C                   MOVEL     ZSIGN4        TSG(4)
+     C                   MOVEL     ZSIGN5        TSG(5)
+     C                   MOVEL     ZSIGN6        TSG(6)
+     C                   MOVEL     ZSIGN7        TSG(7)
+     C                   MOVEL     ZSIGN8        TSG(8)
+     C                   MOVEL     ZSIGN9        TSG(9)
+     C                   Z-ADD     ZMONT1        TMT(1)
+     C                   Z-ADD     ZMONT2        TMT(2)
+     C                   Z-ADD     ZMONT3        TMT(3)
+     C                   Z-ADD     ZMONT4        TMT(4)
+     C                   Z-ADD     ZMONT5        TMT(5)
+     C                   Z-ADD     ZMONT6        TMT(6)
+     C                   Z-ADD     ZMONT7        TMT(7)
+     C                   Z-ADD     ZMONT8        TMT(8)
+     C                   Z-ADD     ZMONT9        TMT(9)
+      *
+      * BOUCLE DE CALCUL : TRANSFERT DES ADDITIONS ET SOUSTRACTIONS
+      * DANS TMONT2, MULTIPLICATION ET DIVISION SONT CALCULEES AVANT
+      * TRANSFERT DANS TMONT2 AFIN DE LES RAMENER A DES OPERATIONS
+      * DE TYPE + OU -
+      *
+     C                   MOVEL     '0'           TAG
+     C                   Z-ADD     0             WMONT
+     C                   Z-ADD     1             I
+     C                   Z-ADD     1             J
+     C                   MOVEL     ' '           TSG2
+     C                   Z-ADD     0             TMT2
+     C     I             DOWLT     10
+     C     TAG           ANDNE     '1'
+     C     I             ADD       1             I2
+     C     TSG(I)        IFEQ      ' '
+     C                   MOVEL     '+'           TSG(I)
+     C                   ENDIF
+     C     TSG(I)        IFEQ      '+'
+     C     TSG(I)        OREQ      '-'
+     C     TSG(I2)       IFEQ      '+'
+     C     TSG(I2)       OREQ      '-'
+     C     TSG(I2)       OREQ      ' '
+     C                   MOVEL     TSG(I)        TSG2(J)
+     C                   Z-ADD     TMT(I)        TMT2(J)
+     C                   ADD       1             J
+     C                   Z-ADD     0             WMONT
+     C                   ELSE
+     C                   MOVEL     TSG(I)        TSG2(J)
+     C                   Z-ADD     0             TMT2(J)
+     C                   Z-ADD     TMT(I)        WMONT
+     C                   ENDIF
+     C                   ELSE
+     C     TSG(I)        IFEQ      '*'
+     C     WMONT         MULT      TMT(I)        WMONT
+     C                   ELSE
+     C     WMONT         DIV       TMT(I)        WMONT
+     C                   ENDIF
+     C     TSG(I2)       IFEQ      '+'
+     C     TSG(I2)       OREQ      '-'
+     C     TSG(I2)       OREQ      ' '
+     C     WMONT         IFGT      WMONT2
+     C                   MOVEL     '1'           TAG
+     C                   ELSE
+     C                   Z-ADD     WMONT         TMT2(J)
+     C                   ADD       1             J
+     C                   ENDIF
+     C                   ENDIF
+     C                   ENDIF
+     C                   ADD       1             I
+     C                   ENDDO
+      *
+      * BOUCLE DE CALCUL / TMONT2 : ADDITIONS ET SOUSTRACTIONS
+      *
+     C                   Z-ADD     0             WMONT
+     C     TAG           IFNE      '1'
+     C                   Z-ADD     1             I
+     C     I             DOWLT     10
+     C     TSG2(I)       IFEQ      '-'
+     C     WMONT         SUB       TMT2(I)       WMONT
+     C                   ELSE
+     C     WMONT         ADD       TMT2(I)       WMONT
+     C                   ENDIF
+     C                   ADD       1             I
+     C                   ENDDO
+     C     WMONT         IFGT      WTOTAL
+     C                   MOVEL     '1'           TAG
+     C                   ENDIF
+     C                   ENDIF
+      *
+     C     TAG           IFEQ      '1'
+     C                   Z-ADD     0             ZTOTAL
+     C                   MOVEL     'OVERFLOW'    ZAVERT
+     C                   ELSE
+     C     WMONT         IFGT      0
+     C     WMONT         ADD       0.0000005     ZTOTAL
+     C                   ELSE
+     C                   Z-ADD     WMONT         ZTOTAL
+     C                   ENDIF
+     C                   ENDIF
+      *
+     C                   ENDSR
+      ***************************************************************
+      * TRAITEMENT GUIDE
+      ***************************************************************
+     C     GUIDE         BEGSR
+      *
+      * GUIDE SUR MONTANT 1
+     C     ZFLD          IFEQ      'ZMONT1'
+     C                   Z-ADD     ZMEMO         ZMONT1
+     C                   GOTO      FINGUI
+     C                   ENDIF
+      * GUIDE SUR MONTANT 2
+     C     ZFLD          IFEQ      'ZMONT2'
+     C                   Z-ADD     ZMEMO         ZMONT2
+     C                   GOTO      FINGUI
+     C                   ENDIF
+      * GUIDE SUR MONTANT 3
+     C     ZFLD          IFEQ      'ZMONT3'
+     C                   Z-ADD     ZMEMO         ZMONT3
+     C                   GOTO      FINGUI
+     C                   ENDIF
+      * GUIDE SUR MONTANT 4
+     C     ZFLD          IFEQ      'ZMONT4'
+     C                   Z-ADD     ZMEMO         ZMONT4
+     C                   GOTO      FINGUI
+     C                   ENDIF
+      * GUIDE SUR MONTANT 5
+     C     ZFLD          IFEQ      'ZMONT5'
+     C                   Z-ADD     ZMEMO         ZMONT5
+     C                   GOTO      FINGUI
+     C                   ENDIF
+      * GUIDE SUR MONTANT 6
+     C     ZFLD          IFEQ      'ZMONT6'
+     C                   Z-ADD     ZMEMO         ZMONT6
+     C                   GOTO      FINGUI
+     C                   ENDIF
+      * GUIDE SUR MONTANT 7
+     C     ZFLD          IFEQ      'ZMONT7'
+     C                   Z-ADD     ZMEMO         ZMONT7
+     C                   GOTO      FINGUI
+     C                   ENDIF
+      * GUIDE SUR MONTANT 8
+     C     ZFLD          IFEQ      'ZMONT8'
+     C                   Z-ADD     ZMEMO         ZMONT8
+     C                   GOTO      FINGUI
+     C                   ENDIF
+      * GUIDE SUR MONTANT 9
+     C     ZFLD          IFEQ      'ZMONT9'
+     C                   Z-ADD     ZMEMO         ZMONT9
+     C                   GOTO      FINGUI
+     C                   ENDIF
+      *
+     C     FINGUI        TAG
+      *
+     C                   ENDSR
+      *****************************************
+      * CALCUL POSITION CURSEUR
+      *****************************************
+     C     POCUR         BEGSR
+      *
+     C     POSC          DIV       256           POSLI             3 0
+     C                   MVR                     POSCO             3 0
+      * RECTIFICATION DE LA POSITION CALCULEE (DECALAGE DU AU FAIT
+      * QU'ON TRAVAILLE DANS UNE FENETRE)
+     C                   SUB       4             POSLI
+     C                   SUB       11            POSCO
+      *
+     C                   ENDSR
+

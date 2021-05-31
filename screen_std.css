@@ -1,0 +1,11 @@
+    #header {
+        padding: 20px 10px 10px 10;
+        border-top: 6px #0c5f91 solid;
+        background: #AED0EA;  /* #DED9DE; */
+        border-bottom: 6px #0c5f91 solid;
+    }
+    #footer {
+        padding: 20px 0 10px 0;
+        border-top: 6px #0c5f91 solid;
+        background: #AED0EA;  /* #DED9DE; */
+    }

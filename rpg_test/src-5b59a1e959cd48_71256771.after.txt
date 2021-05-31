@@ -1,0 +1,443 @@
+     H*****************************************************************
+     H* APPLICATION      : CALCULETTE AS/400                          *
+     H* NOM DU PROGRAMME : CALC (ECRAN ASSOCIE : CALCFM)              *
+     H* DATE DE CREATION : 01/10/1996 (version RPG 3, antiquité       *
+     H*                     destinée aux archéologues ;)              *
+     H* AUTEUR           : GREGORY JARRIGE                            *
+     H*****************************************************************
+     FCALCFM    CF   E             WORKSTN 
+     F                                     INFDS(DSECR)
+      *
+     D TSG             S              1    DIM(10)
+     D TSG2            S              1    DIM(10)
+     D TMT             S             17  6 DIM(10)
+     D TMT2            S             22  9 DIM(10)
+      *
+     D DSECR           DS
+     D  POSC                 370    371B 0
+      ***********************************
+      * TRANSACTION 1
+      ***********************************
+     D I               S              2  0
+     D I2              S              2  0
+     D J               S              2  0
+     D WMONT           S             30  9
+     D WMONT2          S             22  9
+     D WTOTAL          S             17  6
+     D TAG             S              1   
+     D VER01           S              1   
+     D POSLI           S              3  0
+     D POSCO           S              3  0
+      /free
+          I = 0 ;
+          I2 = 0 ;
+          J = 0 ;
+          WMONT = 0 ;
+          WMONT2 = *HIVAL ;
+          WTOTAL = *HIVAL ;
+          TAG = ' ' ;
+
+          ZMEMO = 0 ;
+          Exsr INITI1 ;
+      /end-free
+     C     TRAN01        TAG
+      /free
+          Exfmt FENETRE ;
+      /end-free
+     C     *IN03         CABEQ     *ON           FIN01
+     C     *IN12         CABEQ     *ON           FIN01
+      * CALCUL POSITION DU CURSEUR
+      /free
+          Exsr POCUR ;
+          If ( *IN04 = *ON ) ;
+          Exsr GUIDE ;
+          Endif ;
+          // REPOSITIONNEMENT DU CURSEUR
+          NULIG = POSLI ;
+          NUCOL = POSCO ;
+          // VERIFICATION TRANSACTION
+          VER01 = '0' ;
+          Exsr VERIF1 ;
+      /end-free
+     C     VER01         CABEQ     '1'           TRAN01
+      * CALCUL DU TOTAL
+      /free
+          Exsr VALID1 ;
+          // MISE EN MEMOIRE
+          If ( *IN05 = *ON ) ;
+          ZMEMO = ZTOTAL ;
+          Endif ;
+          // CLEAR DE LA MEMOIRE
+          If ( *IN06 = *ON ) ;
+          ZMEMO = 0 ;
+          Endif ;
+          // CLEAR DE TOUTES LES ZONES (SAUF LA MEMOIRE)
+          If ( *IN07 = *ON ) ;
+          Exsr INITI1 ;
+          Endif ;
+      /end-free
+     C                   GOTO      TRAN01
+     C     FIN01         TAG
+      *
+      /free
+          *INLR = *ON ;
+          //****************************************
+          // INITIALISATION TRANSACTION 1
+          //****************************************
+          Begsr INITI1 ;
+
+      /end-free
+     C                   MOVEL     ' '           ZSIGN1
+     C                   MOVEL     ' '           ZSIGN2
+     C                   MOVEL     ' '           ZSIGN3
+     C                   MOVEL     ' '           ZSIGN4
+     C                   MOVEL     ' '           ZSIGN5
+     C                   MOVEL     ' '           ZSIGN6
+     C                   MOVEL     ' '           ZSIGN7
+     C                   MOVEL     ' '           ZSIGN8
+     C                   MOVEL     ' '           ZSIGN9
+      /free
+          ZMONT1 = 0 ;
+          ZMONT2 = 0 ;
+          ZMONT3 = 0 ;
+          ZMONT4 = 0 ;
+          ZMONT5 = 0 ;
+          ZMONT6 = 0 ;
+          ZMONT7 = 0 ;
+          ZMONT8 = 0 ;
+          ZMONT9 = 0 ;
+          ZTOTAL = 0 ;
+      /end-free
+     C                   MOVEL     *BLANKS       ZAVERT
+      *
+      /free
+          Exsr ;
+          //****************************************
+          // VERIFICATION TRANSACTION 1
+          //****************************************
+          Begsr VERIF1 ;
+
+      /end-free
+     C                   MOVEL     *BLANKS       ZAVERT
+      *
+      /free
+          *IN50 = *OFF ;
+          *IN51 = *OFF ;
+          *IN52 = *OFF ;
+          *IN53 = *OFF ;
+          *IN54 = *OFF ;
+          *IN55 = *OFF ;
+          *IN56 = *OFF ;
+          *IN57 = *OFF ;
+          *IN58 = *OFF ;
+          *IN59 = *OFF ;
+
+          If ( ZSIGN1 = ' ' ) And ( ZMONT1 <> 0 ) ;
+      /end-free
+     C                   MOVEL     '+'           ZSIGN1
+      /free
+          Endif ;
+
+          If ( ZSIGN2 = ' ' ) And ( ZMONT2 <> 0 ) ;
+      /end-free
+     C                   MOVEL     '+'           ZSIGN2
+      /free
+          Endif ;
+
+          If ( ZSIGN3 = ' ' ) And ( ZMONT3 <> 0 ) ;
+      /end-free
+     C                   MOVEL     '+'           ZSIGN3
+      /free
+          Endif ;
+
+          If ( ZSIGN4 = ' ' ) And ( ZMONT4 <> 0 ) ;
+      /end-free
+     C                   MOVEL     '+'           ZSIGN4
+      /free
+          Endif ;
+
+          If ( ZSIGN5 = ' ' ) And ( ZMONT5 <> 0 ) ;
+      /end-free
+     C                   MOVEL     '+'           ZSIGN5
+      /free
+          Endif ;
+
+          If ( ZSIGN6 = ' ' ) And ( ZMONT6 <> 0 ) ;
+      /end-free
+     C                   MOVEL     '+'           ZSIGN6
+      /free
+          Endif ;
+
+          If ( ZSIGN7 = ' ' ) And ( ZMONT7 <> 0 ) ;
+      /end-free
+     C                   MOVEL     '+'           ZSIGN7
+      /free
+          Endif ;
+
+          If ( ZSIGN8 = ' ' ) And ( ZMONT8 <> 0 ) ;
+      /end-free
+     C                   MOVEL     '+'           ZSIGN8
+      /free
+          Endif ;
+
+          If ( ZSIGN9 = ' ' ) And ( ZMONT9 <> 0 ) ;
+      /end-free
+     C                   MOVEL     '+'           ZSIGN9
+      /free
+          Endif ;
+
+          If ( ZSIGN1 = '/' ) And ( ZMONT1 = 0 ) ;
+          *IN51 = *ON ;
+          VER01 = '1' ;
+          Endif ;
+
+          If ( ZSIGN2 = '/' ) And ( ZMONT2 = 0 ) ;
+          *IN52 = *ON ;
+          VER01 = '1' ;
+          Endif ;
+
+          If ( ZSIGN3 = '/' ) And ( ZMONT3 = 0 ) ;
+          *IN53 = *ON ;
+          VER01 = '1' ;
+          Endif ;
+
+          If ( ZSIGN4 = '/' ) And ( ZMONT4 = 0 ) ;
+          *IN54 = *ON ;
+          VER01 = '1' ;
+          Endif ;
+
+          If ( ZSIGN5 = '/' ) And ( ZMONT5 = 0 ) ;
+          *IN55 = *ON ;
+          VER01 = '1' ;
+          Endif ;
+
+          If ( ZSIGN6 = '/' ) And ( ZMONT6 = 0 ) ;
+          *IN56 = *ON ;
+          VER01 = '1' ;
+          Endif ;
+
+          If ( ZSIGN7 = '/' ) And ( ZMONT7 = 0 ) ;
+          *IN57 = *ON ;
+          VER01 = '1' ;
+          Endif ;
+
+          If ( ZSIGN8 = '/' ) And ( ZMONT8 = 0 ) ;
+          *IN58 = *ON ;
+          VER01 = '1' ;
+          Endif ;
+
+          If ( ZSIGN9 = '/' ) And ( ZMONT9 = 0 ) ;
+          *IN59 = *ON ;
+          VER01 = '1' ;
+          Endif ;
+
+          Exsr ;
+          //****************************************************************
+          // VALIDATION TRANSACTION 1
+          //****************************************************************
+          // CETTE PROCEDURE CONTIENT L'ALGORITHME DE CALCUL
+          // PRECISION DE 9 DECIMALES EN INTERNE
+          // MULTIPLICATION & DIVISION PRIORITAIRES / ADDITION & SOUSTRACTION
+
+          Begsr VALID1 ;
+
+      /end-free
+     C                   MOVEL     ' '           TSG
+      /free
+          TMT = 0 ;
+
+      /end-free
+     C                   MOVEL     ZSIGN1        TSG(1)
+     C                   MOVEL     ZSIGN2        TSG(2)
+     C                   MOVEL     ZSIGN3        TSG(3)
+     C                   MOVEL     ZSIGN4        TSG(4)
+     C                   MOVEL     ZSIGN5        TSG(5)
+     C                   MOVEL     ZSIGN6        TSG(6)
+     C                   MOVEL     ZSIGN7        TSG(7)
+     C                   MOVEL     ZSIGN8        TSG(8)
+     C                   MOVEL     ZSIGN9        TSG(9)
+      /free
+          TMT(1) = ZMONT1 ;
+          TMT(2) = ZMONT2 ;
+          TMT(3) = ZMONT3 ;
+          TMT(4) = ZMONT4 ;
+          TMT(5) = ZMONT5 ;
+          TMT(6) = ZMONT6 ;
+          TMT(7) = ZMONT7 ;
+          TMT(8) = ZMONT8 ;
+          TMT(9) = ZMONT9 ;
+
+          // BOUCLE DE CALCUL : TRANSFERT DES ADDITIONS ET SOUSTRACTIONS
+          // DANS TMONT2, MULTIPLICATION ET DIVISION SONT CALCULEES AVANT
+          // TRANSFERT DANS TMONT2 AFIN DE LES RAMENER A DES OPERATIONS
+          // DE TYPE + OU -
+
+          TAG = '0' ;
+          WMONT = 0 ;
+          I = 1 ;
+          J = 1 ;
+      /end-free
+     C                   MOVEL     ' '           TSG2
+      /free
+          TMT2 = 0 ;
+          Dow ( I < 10 ) And ( TAG <> '1' ) ;
+          I2 = I + 1 ;
+          If ( TSG(I) = ' ' ) ;
+      /end-free
+     C                   MOVEL     '+'           TSG(I)
+      /free
+          Endif ;
+          If ( TSG(I) = '+' ) Or ( TSG(I) = '-' ) ;
+          If ( TSG(I2) = '+' ) Or ( TSG(I2) = '-' ) Or ( TSG(I2) = ' ' ) ;
+      /end-free
+     C                   MOVEL     TSG(I)        TSG2(J)
+      /free
+          TMT2(J) = TMT(I) ;
+          J += 1 ;
+          WMONT = 0 ;
+          Else ;
+      /end-free
+     C                   MOVEL     TSG(I)        TSG2(J)
+      /free
+          TMT2(J) = 0 ;
+          WMONT = TMT(I) ;
+          Endif ;
+          Else ;
+          If ( TSG(I) = '*' ) ;
+          WMONT = WMONT * TMT(I) ;
+          Else ;
+          WMONT = %DIV(WMONT:TMT(I));
+          Endif ;
+          If ( TSG(I2) = '+' ) Or ( TSG(I2) = '-' ) Or ( TSG(I2) = ' ' ) ;
+          If ( WMONT > WMONT2 ) ;
+          TAG = '1' ;
+          Else ;
+          TMT2(J) = WMONT ;
+          J += 1 ;
+          Endif ;
+          Endif ;
+          Endif ;
+          I += 1 ;
+          EndDo ;
+
+          // BOUCLE DE CALCUL / TMONT2 : ADDITIONS ET SOUSTRACTIONS
+
+          WMONT = 0 ;
+          If ( TAG <> '1' ) ;
+          I = 1 ;
+          Dow ( I < 10 ) ;
+          If ( TSG2(I) = '-' ) ;
+          WMONT = WMONT - TMT2(I) ;
+          Else ;
+          WMONT = WMONT + TMT2(I) ;
+          Endif ;
+          I += 1 ;
+          EndDo ;
+          If ( WMONT > WTOTAL ) ;
+          TAG = '1' ;
+          Endif ;
+          Endif ;
+
+          If ( TAG = '1' ) ;
+          ZTOTAL = 0 ;
+      /end-free
+     C                   MOVEL     'OVERFLOW'    ZAVERT
+      /free
+          Else ;
+          If ( WMONT > 0 ) ;
+          ZTOTAL = WMONT + 0.0000005 ;
+          Else ;
+          ZTOTAL = WMONT ;
+          Endif ;
+          Endif ;
+
+          Exsr ;
+          //**************************************************************
+          // TRAITEMENT GUIDE
+          //**************************************************************
+          Begsr GUIDE ;
+
+          // GUIDE SUR MONTANT 1
+          If ( ZFLD = 'ZMONT1' ) ;
+          ZMONT1 = ZMEMO ;
+      /end-free
+     C                   GOTO      FINGUI
+      /free
+          Endif ;
+          // GUIDE SUR MONTANT 2
+          If ( ZFLD = 'ZMONT2' ) ;
+          ZMONT2 = ZMEMO ;
+      /end-free
+     C                   GOTO      FINGUI
+      /free
+          Endif ;
+          // GUIDE SUR MONTANT 3
+          If ( ZFLD = 'ZMONT3' ) ;
+          ZMONT3 = ZMEMO ;
+      /end-free
+     C                   GOTO      FINGUI
+      /free
+          Endif ;
+          // GUIDE SUR MONTANT 4
+          If ( ZFLD = 'ZMONT4' ) ;
+          ZMONT4 = ZMEMO ;
+      /end-free
+     C                   GOTO      FINGUI
+      /free
+          Endif ;
+          // GUIDE SUR MONTANT 5
+          If ( ZFLD = 'ZMONT5' ) ;
+          ZMONT5 = ZMEMO ;
+      /end-free
+     C                   GOTO      FINGUI
+      /free
+          Endif ;
+          // GUIDE SUR MONTANT 6
+          If ( ZFLD = 'ZMONT6' ) ;
+          ZMONT6 = ZMEMO ;
+      /end-free
+     C                   GOTO      FINGUI
+      /free
+          Endif ;
+          // GUIDE SUR MONTANT 7
+          If ( ZFLD = 'ZMONT7' ) ;
+          ZMONT7 = ZMEMO ;
+      /end-free
+     C                   GOTO      FINGUI
+      /free
+          Endif ;
+          // GUIDE SUR MONTANT 8
+          If ( ZFLD = 'ZMONT8' ) ;
+          ZMONT8 = ZMEMO ;
+      /end-free
+     C                   GOTO      FINGUI
+      /free
+          Endif ;
+          // GUIDE SUR MONTANT 9
+          If ( ZFLD = 'ZMONT9' ) ;
+          ZMONT9 = ZMEMO ;
+      /end-free
+     C                   GOTO      FINGUI
+      /free
+          Endif ;
+
+      /end-free
+     C     FINGUI        TAG
+      *
+      /free
+          Exsr ;
+          //****************************************
+          // CALCUL POSITION CURSEUR
+          //****************************************
+          Begsr POCUR ;
+
+          POSLI = %DIV(POSC:256);
+          POSCO = %REM(POSC:256);
+          // RECTIFICATION DE LA POSITION CALCULEE (DECALAGE DU AU FAIT
+          // QU'ON TRAVAILLE DANS UNE FENETRE)
+          POSLI -= 4 ;
+          POSCO -= 11 ;
+
+          Exsr ;
+
+      /end-free

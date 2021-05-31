@@ -1,0 +1,319 @@
+     H*****************************************************************
+     H* APPLICATION      : CALCULETTE AS/400                          *
+     H* NOM DU PROGRAMME : CALC (ECRAN ASSOCIE : CALCFM)              *
+     H* DATE DE CREATION : 01/10/1996                                 *
+     H* DATE DE REVISION : 31/05/2012 (Réécriture en RPG Free)        *
+     H* AUTEUR           : GREGORY JARRIGE                            *
+     H*****************************************************************
+     FCALCFM    CF   E             WORKSTN 
+     F                                     INFDS(DSECR) 
+     D TSG             S              1    DIM(10)
+     D TSG2            S              1    DIM(10)
+     D TMT             S             17  6 DIM(10)
+     D TMT2            S             22  9 DIM(10)
+     D WI              S              2  0
+     D WI2             S              2  0
+     D WJ              S              2  0
+     D WMONT           S             30  9
+     D WMONT2          S             22  9  
+     D WTOTAL          S             17	 6
+     D WTAG            S              1	 
+     D VER01           S              1
+     D POSLI           S              3  0
+     D POSCO           S              3  0
+     D DSECR           DS
+     D  POSC                 370    371B 0
+      ***********************************
+      /free
+            WI     = 0 ; 
+            WI2    = 0 ;
+            WJ     = 0 ;
+            WMONT  = 0 ; 
+            WMONT2 = *HIVAL ;
+            WTOTAL = *HIVAL ; 
+            WTAG   = ' ' ; 
+            ZMEMO  = 0 ;
+
+            Exsr INITI1 ;
+
+            Dow *IN03 <> *ON and *IN12 <> *ON ;
+                Exfmt FENETRE ;
+
+                // CALCUL POSITION DU CURSEUR
+                Exsr POCUR ;
+
+                If *IN04 = *ON ;
+                    Exsr GUIDE ;
+                Endif ;
+
+                // REPOSITIONNEMENT DU CURSEUR
+                NULIG = POSLI ;         
+                NUCOL = POSCO ;        
+
+                // VERIFICATION TRANSACTION
+                VER01 = '0' ; 
+
+                Exsr VERIF1 ;
+
+                If VER01 = '0' ;
+                    // CALCUL DU TOTAL
+                    Exsr VALID1 ;
+
+                    // MISE EN MEMOIRE
+                    If *IN05 = *ON ;
+                        ZMEMO = ZTOTAL ;        
+                    Endif ;
+
+                    // CLEAR DE LA MEMOIRE
+                    If *IN06 = *ON ;
+                        ZMEMO = 0 ;             
+                    Endif ;
+
+                    // CLEAR DE TOUTES LES ZONES (SAUF LA MEMOIRE)
+                    If *IN07 = *ON ;
+                        Exsr INITI1 ;
+                    Endif ;
+                Endif ;
+            Enddo ;
+
+            *INLR = *ON ;
+            //*****************************************
+            // INITIALISATION TRANSACTION 1
+            //****************************************
+            Begsr INITI1 ;
+                ZSIGN1 = ' ' ;
+                ZSIGN2 = ' ' ;
+                ZSIGN3 = ' ' ;
+                ZSIGN4 = ' ' ;
+                ZSIGN5 = ' ' ;
+                ZSIGN6 = ' ' ;
+                ZSIGN7 = ' ' ;
+                ZSIGN8 = ' ' ;
+                ZSIGN9 = ' ' ;
+                ZMONT1 = 0 ;
+                ZMONT2 = 0 ;
+                ZMONT3 = 0 ;
+                ZMONT4 = 0 ;
+                ZMONT5 = 0 ;
+                ZMONT6 = 0 ;
+                ZMONT7 = 0 ;
+                ZMONT8 = 0 ;
+                ZMONT9 = 0 ;
+                ZTOTAL = 0 ;
+                ZAVERT = *BLANKS ;
+            Endsr ;
+            //****************************************
+            // VERIFICATION TRANSACTION 1
+            //****************************************
+            Begsr VERIF1 ;
+                ZAVERT = *BLANKS ;       
+
+                If  ZSIGN1 = ' ' and ZMONT1 <> 0 ;
+                    ZSIGN1 = '+' ;          
+                Endif ;
+                If  ZSIGN2 = ' ' and ZMONT2 <> 0 ;
+                    ZSIGN2 = '+' ;          
+                Endif ;
+                If  ZSIGN3 = ' ' and ZMONT3 <> 0 ;
+                    ZSIGN3 = '+' ;          
+                Endif ;
+                If  ZSIGN4 = ' ' and ZMONT4 <> 0 ;
+                    ZSIGN4 = '+' ;          
+                Endif ;
+                If  ZSIGN5 = ' ' and ZMONT5 <> 0 ;
+                    ZSIGN5 = '+' ;          
+                Endif ;
+                If  ZSIGN6 = ' ' and ZMONT6 <> 0 ;
+                    ZSIGN6 = '+' ;          
+                Endif ;
+                If  ZSIGN7 = ' ' and ZMONT7 <> 0 ;
+                    ZSIGN7 = '+' ;          
+                Endif ;
+                If  ZSIGN8 = ' ' and ZMONT8 <> 0 ;
+                    ZSIGN8 = '+' ;          
+                Endif ;
+                If  ZSIGN9 = ' ' and ZMONT9 <> 0 ;
+                    ZSIGN9 = '+' ;          
+                Endif ;
+
+                If ZSIGN1 = '/' and ZMONT1 = 0 ;
+                    VER01   = '1' ;
+                    ZAVERT  = 'Division par zéro impossible' ;                    
+                Endif ;
+                If ZSIGN2 = '/' and ZMONT2 = 0 ;
+                    VER01   = '1' ;
+                    ZAVERT  = 'Division par zéro impossible' ;                    
+                Endif ;
+                If ZSIGN3 = '/' and ZMONT3 = 0 ;
+                    VER01   = '1' ;
+                    ZAVERT  = 'Division par zéro impossible' ;                    
+                Endif ;
+                If ZSIGN4 = '/' and ZMONT4 = 0 ;
+                    VER01   = '1' ;
+                    ZAVERT  = 'Division par zéro impossible' ;                    
+                Endif ;
+                If ZSIGN5 = '/' and ZMONT5 = 0 ;
+                    VER01   = '1' ;
+                    ZAVERT  = 'Division par zéro impossible' ;                    
+                Endif ;
+                If ZSIGN6 = '/' and ZMONT6 = 0 ;
+                    VER01   = '1' ;
+                    ZAVERT  = 'Division par zéro impossible' ;                    
+                Endif ;
+                If ZSIGN7 = '/' and ZMONT7 = 0 ;
+                    VER01   = '1' ;
+                    ZAVERT  = 'Division par zéro impossible' ;                    
+                Endif ;
+                If ZSIGN8 = '/' and ZMONT8 = 0 ;
+                    VER01   = '1' ;
+                    ZAVERT  = 'Division par zéro impossible' ;                    
+                Endif ;
+                If ZSIGN9 = '/' and ZMONT9 = 0 ;
+                    VER01   = '1' ;
+                    ZAVERT  = 'Division par zéro impossible' ;                    
+                Endif ;
+
+            Endsr ;
+            //****************************************************************
+            // VALIDATION TRANSACTION 1
+            //****************************************************************
+            // CETTE PROCEDURE CONTIENT L'ALGORITHME DE CALCUL
+            // PRECISION DE 9 DECIMALES EN INTERNE
+            // MULTIPLICATION & DIVISION PRIORITAIRES / ADDITION & SOUSTRACTION
+
+            Begsr VALID1 ;
+                TSG = ' ' ;           
+                TMT =  0  ;            
+
+                TSG(1) = ZSIGN1 ;
+                TSG(2) = ZSIGN2 ;
+                TSG(3) = ZSIGN3 ;
+                TSG(4) = ZSIGN4 ;
+                TSG(5) = ZSIGN5 ;
+                TSG(6) = ZSIGN6 ;
+                TSG(7) = ZSIGN7 ;
+                TSG(8) = ZSIGN8 ;
+                TSG(9) = ZSIGN9 ;
+
+                TMT(1) = ZMONT1 ;
+                TMT(2) = ZMONT2 ;
+                TMT(3) = ZMONT3 ;
+                TMT(4) = ZMONT4 ;
+                TMT(5) = ZMONT5 ;
+                TMT(6) = ZMONT6 ;
+                TMT(7) = ZMONT7 ;
+                TMT(8) = ZMONT8 ;
+                TMT(9) = ZMONT9 ;
+
+                // BOUCLE DE CALCUL : TRANSFERT DES ADDITIONS ET SOUSTRACTIONS
+                // DANS TMONT2, MULTIPLICATION ET DIVISION SONT CALCULEES AVANT
+                // TRANSFERT DANS TMONT2 AFIN DE LES RAMENER A DES OPERATIONS
+                // DE TYPE + OU -
+                WTAG   =  '0' ;
+                WMONT  = 0 ;             
+                WI     = 1 ;
+                WJ     = 1 ; 
+                TSG2   = ' ' ;           
+                TMT2   = 0 ;
+                Dow WI < 10 and WTAG <> '1' ;
+                    WI2 = WI + 1 ;
+                    If TSG(WI) = ' ' ;
+                        TSG(WI) = '+' ;           
+                    Endif ;
+                    If TSG(WI) = '+' or TSG(WI) = '-' ;
+                        If TSG(WI2) = '+' or TSG(WI2) = '-' or TSG(WI2) = ' ' ;
+                            TSG2(WJ) = TSG(WI) ;        
+                            TMT2(WJ) = TMT(WI) ;       
+                            WJ += 1 ;
+                            WMONT = 0 ;             
+                        Else ;
+                            TSG2(WJ) = TSG(WI) ;    
+                            TMT2(WJ) = 0 ;             
+                            WMONT    = TMT(WI) ;       
+                        Endif ;
+                    Else ;
+                        If TSG(WI) = '*' ;
+                            WMONT *= TMT(WI) ;
+                        Else ;
+                            WMONT /= TMT(WI) ;
+                        Endif ;
+                        If TSG(WI2) = '+' or TSG(WI2) = '-' or TSG(WI2) = ' ' ;
+                            If WMONT > WMONT2 ;
+                                WTAG = '1' ;           
+                            Else ;
+                                TMT2(WJ) = WMONT ;         
+                                WJ += 1 ;
+                            Endif ;
+                        Endif ;
+                    Endif ;
+                    WI += 1 ;         
+                Enddo ;
+
+                // BOUCLE DE CALCUL / TMONT2 : ADDITIONS ET SOUSTRACTIONS
+
+                WMONT =  0 ;             
+                If WTAG  <> '1' ;
+                    WI = 1 ;             
+                    DOW WI < 10 ;
+                        If TSG2(WI) = '-' ;
+                        WMONT -= TMT2(WI) ;
+                        Else ;
+                        WMONT += TMT2(WI) ;
+                        Endif ;
+                    WI += 1 ;              
+                    Enddo ;
+                    If WMONT > WTOTAL ;
+                        WTAG = '1' ;           
+                    Endif ;
+                Endif ;
+
+                If WTAG = '1' ;
+                    ZTOTAL = 0 ;            
+                    ZAVERT = 'OVERFLOW' ;   
+                Else ;
+                    If WMONT > 0 ;
+                        ZTOTAL = WMONT + 0.0000005 ;    
+                    Else ;
+                        ZTOTAL = WMONT ;         
+                    Endif ;
+                Endif ;
+
+                Endsr ;
+            //**************************************************************
+            // TRAITEMENT GUIDE
+            //**************************************************************
+            Begsr GUIDE ;
+                Select;
+                When ZFLD = 'ZMONT1';
+                    ZMONT1 = ZMEMO ; 
+                When ZFLD = 'ZMONT2';
+                    ZMONT2 = ZMEMO ; 
+                When ZFLD = 'ZMONT3';
+                    ZMONT3 = ZMEMO ; 
+                When ZFLD = 'ZMONT4';
+                    ZMONT4 = ZMEMO ; 
+                When ZFLD = 'ZMONT5';
+                    ZMONT5 = ZMEMO ; 
+                When ZFLD = 'ZMONT6';
+                    ZMONT6 = ZMEMO ; 
+                When ZFLD = 'ZMONT7';
+                    ZMONT7 = ZMEMO ; 
+                When ZFLD = 'ZMONT8';
+                    ZMONT8 = ZMEMO ; 
+                When ZFLD = 'ZMONT9';
+                    ZMONT9 = ZMEMO ; 
+                Endsl;
+
+            Endsr ;
+            //****************************************
+            // CALCUL POSITION CURSEUR
+            //****************************************
+            Begsr POCUR ;     
+                POSLI = %DIV(POSC:256); 
+                POSCO = %REM(POSC:256);  
+
+                // RECTIFICATION DE LA POSITION CALCULEE (DECALAGE DU AU FAIT
+                // QU'ON TRAVAILLE DANS UNE FENETRE)
+                POSLI -= 4 ;
+                POSCO -= 11 ;     
+            Endsr ;

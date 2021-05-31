@@ -1,0 +1,33 @@
+/**************************************************************/
+/* OBJET : PROGRAMME DE LANCEMENT DE LA CALCULETTE AS/400     */
+/*   CREE  : PAR G. JARRIGE   LE 18/05/2006                   */
+/*   MODIF : PAR              LE   /  /                       */
+/**************************************************************/
+             PGM 
+
+             DCL        VAR(&LSTLIB) TYPE(*CHAR) LEN(275)
+             DCL        VAR(&CHGLIB) TYPE(*CHAR) LEN(300)
+
+ /*   RECUPERATION LISTE DES BIB. EN COURS    */
+
+             RTVJOBA    USRLIBL(&LSTLIB)
+
+ /*   AJOUT DES BIB. DU MODULE SPECIFIQUE */
+
+             ADDLIBLE   LIB(DEVOBJ) POSITION(*FIRST)
+             MONMSG     MSGID(CPF0000)
+
+ /*   APPEL DU MODULE SPECIFIQUE */
+
+             CALL       PGM(CALC)
+
+ /*   PREPARATION DE LA CDE DE RESTAURATION DES ANCIENNES BIB.  */
+
+             CHGVAR     VAR(&CHGLIB) VALUE('CHGLIBL (' *CAT +
+                          &LSTLIB *CAT ')')
+
+/*   APPEL DE LA COMMANDE IBM QCMDEXC POUR RESTAURER LES BIB.  */
+
+            CALL       PGM(*LIBL/QCMDEXC) PARM(&CHGLIB 300)
+
+FIN:        ENDPGM
